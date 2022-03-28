@@ -1,4 +1,50 @@
 >网络上东拼西凑 俺不会python
+>
+>代码很烂，，所以需要修改的地方很多。望海涵。指错必修！！！
+
+很有可能过几天就不能用了，望周知 
+
+# 代码简介
+
+借鉴的链接：
+
+>python抓取js页面
+>
+>selenium结合phantomjs
+>
+>https://blog.csdn.net/pushiqiang/article/details/51290509
+>
+>【基于python实现UI自动化】5. selenium实现获取页面元素属性(内容、标题、URL、浏览器名称等)
+>
+>https://blog.csdn.net/lht3347/article/details/117339848
+>
+>网页爬虫之cookie自动获取
+>
+>https://blog.csdn.net/qq_30175203/article/details/52105082
+
+
+
+此为主程序:
+
+![image-20220329002418591](README.assets/image-20220329002418591.png)
+
+```
+1. main.py 
+
+2. userId_and_defid.py
+
+3. uuid_download.py
+这三个主要文件均为py文件夹下类的整合
+```
+
+
+
+
+
+exe网盘链接：
+
+链接：https://pan.baidu.com/s/1kQQaNM9bzSeNkXQuIY9ABg 
+提取码：0000
 
 # 提示：
 
