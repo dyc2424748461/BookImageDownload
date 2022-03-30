@@ -32,7 +32,7 @@ if __name__ == '__main__':
     # page=(input('请输入页数'))
     # download.download(book.idNum, book.id, book.page)
     
-    bookDir=pwd+'\\'+book.name+'\\'
+    bookDir=pwd+'\\'+book1.name+'\\'
     #使用idNum 去下载每一页的png文件 
     #此时的目录在以bookname命名的文件夹下
     Download(book1.idNum, book1.name, book1.page)
@@ -46,5 +46,5 @@ if __name__ == '__main__':
     
     
     #将下载的目录格式化 并且打入目录
-    muluchuli(bookDir, book.name,dire.ml)
+    muluchuli(bookDir, book1.name,dire.ml)
     sleep(20)
