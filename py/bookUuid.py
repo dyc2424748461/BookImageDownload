@@ -14,7 +14,7 @@ import jsonsearch
 import json
 import sys
 from time import sleep
-
+from re import sub
 
 class book:
     id=str()
@@ -146,8 +146,11 @@ class book:
         data=resp.read().decode('utf-8')
         soup = BeautifulSoup(data,'html.parser')
         print("BookName："+soup.title.string)
+        #将bookname中含有特殊字符替换成“-”，以便建文件夹
+        EPunctuation='\\\\/:*?"<>|'
+        name=sub('[{}]'.format(EPunctuation),'-',soup.title.string)
         sleep(2)
-        return soup.title.string
+        return name
     
     def createTxt(self):
         f=open(self.name+'.html','w')
@@ -165,4 +168,3 @@ if __name__=='__main__':
     book1.idNum=input('uuid')
     print(book1.name)
     print(book1.page)
-

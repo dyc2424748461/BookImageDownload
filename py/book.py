@@ -12,7 +12,7 @@ import requests
 import jsonsearch
 import json
 import sys
-
+from re import sub
 
 
 class book:
@@ -132,7 +132,10 @@ class book:
         data=resp.read().decode('utf-8')
         soup = BeautifulSoup(data,'html.parser')
         print("BookName："+soup.title.string)
-        return soup.title.string
+         #将bookname中含有特殊字符替换成“-”，以便建文件夹
+        EPunctuation='\\\\/:*?"<>|'
+        name=sub('[{}]'.format(EPunctuation),'-',soup.title.string)
+        return name
     
     def createTxt(self):
         f=open(self.name+'.html','w')
