@@ -16,6 +16,7 @@ from py.chulimulu import *
 from py.creatPDF import *
 import os
 from time import sleep
+from py.ml import *
 
 if __name__ == '__main__':
     print('书籍主页类似于(打开链接查看一下)：https://book.sciencereading.cn/shop/book/Booksimple/show.do?id=BB4EB124D2A72B4DBE053020B0A0A860E000')
@@ -41,7 +42,8 @@ if __name__ == '__main__':
     creatPdf(book.name)
     
     #使用用户的cookie和book id 下载book的目录
-    dire=directory('',bookId,book.name)
+   # dire=directory('',bookId,book.name)
+    dire=ml.ml(book.idNum, book.name)
     
     
     #将下载的目录格式化 并且打入目录

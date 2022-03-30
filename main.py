@@ -7,11 +7,12 @@ Created on Thu Mar 17 01:33:16 2022
 from py.book import *
 from py.download import *
 from py.default_userCookieVal import *
-from py.directory import *
+#from py.directory import *
 from py.chulimulu import *
 from py.creatPDF import *
 import os
 from time import sleep
+from py.ml import *
 
 if __name__=='__main__':
     print('请输入科学文库书籍的介绍页面')
@@ -37,7 +38,8 @@ if __name__=='__main__':
     creatPdf(Book.name)
     
     #使用用户的cookie和book id 下载book的目录
-    dire=directory(bookId_cookie.get_cookie(),Book.id,Book.name)
+    #dire=directory(bookId_cookie.get_cookie(),Book.id,Book.name)
+     dire=ml.ml(Book.idNum, Book.name)
     
     
     #将下载的目录格式化 并且打入目录
