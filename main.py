@@ -32,7 +32,7 @@ if __name__=='__main__':
     bookDir=pwd+'\\'+Book.name+'\\'
     #使用idNum 去下载每一页的png文件 
     #此时的目录在以bookname命名的文件夹下
-    download(Book.idNum, Book.name, Book.page)
+    Download(Book.idNum, Book.name, Book.page)
     
     #将下载的图片合成一个pdf
     creatPdf(Book.name)

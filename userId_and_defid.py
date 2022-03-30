@@ -23,7 +23,7 @@ if __name__ == '__main__':
     url=input('请输入科学文库书籍主页:')
     bookId=url[63:]
     # bookdefid=(input('请输入defid'))
-    book=book(bookId, '')
+    book1=book(bookId, '')
     parent=path.abspath(path.join(path.dirname("__file__"),path.pardir))
     chdir(parent)
     
@@ -35,14 +35,14 @@ if __name__ == '__main__':
     bookDir=pwd+'\\'+book.name+'\\'
     #使用idNum 去下载每一页的png文件 
     #此时的目录在以bookname命名的文件夹下
-    download(book.idNum, book.name, book.page)
+    Download(book1.idNum, book1.name, book1.page)
     
     #将下载的图片合成一个pdf
-    creatPdf(book.name)
+    creatPdf(book1.name)
     
     #使用用户的cookie和book id 下载book的目录
    # dire=directory('',bookId,book.name)
-    dire=ml(book.idNum,book.name)
+    dire=ml(book1.idNum,book1.name)
     
     
     #将下载的目录格式化 并且打入目录
