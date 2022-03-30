@@ -7,13 +7,14 @@ Created on Thu Mar 17 01:07:15 2022
 
 
 from wget import download,detect_filename
+
 from os import path,mkdir,chdir,listdir,remove
 from random import randint
 from time import sleep
 from os import getcwd
 
 #下载 一次性任务
-class download:
+class Download:
     print('下载')
     falseList=list()
     
@@ -52,13 +53,13 @@ class download:
        #create a url
 #this url need you to change
     def url(self,num):
-        url = ('https://wkobwp.sciencereading.cn/asserts/'
+        urladd = ('https://wkobwp.sciencereading.cn/asserts/'
                +self.idNum
                +'/image/'
                +str(num)
                +'/100?accessToken=accessToken&formMode=true')
         print('正在下载第\t'+str(num+1)+'页')
-        return url
+        return urladd
  
 
 
@@ -79,15 +80,15 @@ class download:
             
 #单个下载
     def downloadOne(self,pageNum,AFilename):
-        try:
+        # try:
             detect_filename(AFilename)
             download(self.url(pageNum),out=AFilename)
             sleep(randint(3, 5))
             print()
-        except:
-            print("when downloaded the page" +str(pageNum+1)+"\t error occured")
-            sleep(3)
-            self.falseList.append(pageNum)
+        # except:
+        #     print("when downloaded the page" +str(pageNum+1)+"\t error occured")
+        #     sleep(3)
+        #     self.falseList.append(pageNum)
             
     def check(self):
         tmpCheck = False

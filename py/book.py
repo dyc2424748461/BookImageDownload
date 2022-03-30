@@ -139,6 +139,7 @@ class book:
          #将bookname中含有特殊字符替换成“-”，以便建文件夹
         EPunctuation='\\\\/:*?"<>|'
         name=sub('[{}]'.format(EPunctuation),'-',soup.title.string)
+        print('name:'+str(type(name)))
         return name
     
     def createTxt(self):
