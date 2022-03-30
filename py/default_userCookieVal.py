@@ -4,10 +4,10 @@ Created on Thu Mar 17 01:06:20 2022
 
 @author: MeiYouDYC
 """
-import os
+from os import path,mkdir,getcwd,walk
 from time import time
 from selenium import webdriver
-import pickle
+from pickle import dump,load
 
 class bookIdAndDefault_userCookieVal:
     id=str()
@@ -16,8 +16,8 @@ class bookIdAndDefault_userCookieVal:
     def __init__(self,pwdcookie,url):
 
         self.cookiesdir = pwdcookie
-        if not os.path.exists(self.cookiesdir):
-            os.mkdir(self.cookiesdir)
+        if not path.exists(self.cookiesdir):
+            mkdir(self.cookiesdir)
         self.url=url
         indexStr = url.index('=')
         self.id=url[indexStr+1:]
@@ -45,7 +45,7 @@ class bookIdAndDefault_userCookieVal:
         
             f = open(self.cookiesdir+cookie['name']+'.cookies','wb')
             
-            pickle.dump(cookie, f)
+            dump(cookie, f)
             
             f.close()
             
@@ -67,9 +67,9 @@ class bookIdAndDefault_userCookieVal:
     def get_cookie_from_cache(self):
     
         cookie_dict = {}
-        print(os.getcwd())
+        print(getcwd())
     
-        for parent, dirnames, filenames in os.walk(self.cookiesdir):
+        for parent, dirnames, filenames in walk(self.cookiesdir):
         
             for filename in filenames:
             
@@ -80,7 +80,7 @@ class bookIdAndDefault_userCookieVal:
         
                     with open(self.cookiesdir+filename, 'rb+') as f:
         
-                        d = pickle.load(f)
+                        d = load(f)
         
                         if d.__contains__('name') and d.__contains__('value') and d.__contains__('expiry'):
         

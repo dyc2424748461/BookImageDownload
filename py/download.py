@@ -5,9 +5,12 @@ Created on Thu Mar 17 01:07:15 2022
 @author: MeiYouDYC
 """
 
-import wget,os,random
+
+from wget import download,detect_filename
+from os import path,mkdir,chdir,listdir,remove
+from random import randint
 from time import sleep
-import sys
+from os import getcwd
 
 #下载 一次性任务
 class download:
@@ -32,18 +35,18 @@ class download:
         # mkdir a folder 
         try:
             folder= self.name
-            isExists=os.path.exists(folder)
+            isExists=path.exists(folder)
             #print(isExists)
             if not isExists:
-                os.mkdir(folder)
+                mkdir(folder)
         except:
                print("network or fileOs occured error")
-               sys.exit (0)
+               exit(0)
             
         #chang dir to ./png
-        pwd=os.getcwd()+'\\'+ folder
+        pwd=getcwd()+'\\'+ folder
         print(pwd)
-        os.chdir(pwd)
+        chdir(pwd)
         return pwd
 
        #create a url
@@ -68,7 +71,7 @@ class download:
             '''
             
             '''
-            if os.path.exists(filename):
+            if path.exists(filename):
                 print(str(i+1)+'\t页已存在')
                 continue
             else:
@@ -77,9 +80,9 @@ class download:
 #单个下载
     def downloadOne(self,pageNum,AFilename):
         try:
-            wget.detect_filename(AFilename)
-            wget.download(self.url(pageNum),out=AFilename)
-            sleep(random.randint(3, 5))
+            detect_filename(AFilename)
+            download(self.url(pageNum),out=AFilename)
+            sleep(randint(3, 5))
             print()
         except:
             print("when downloaded the page" +str(pageNum+1)+"\t error occured")
@@ -89,13 +92,13 @@ class download:
     def check(self):
         tmpCheck = False
         #print(os.listdir())
-        for checkfile in os.listdir():
+        for checkfile in listdir():
             orderNum = checkfile.split('.')[0]
-            if(os.path.getsize(checkfile)<=50):
+            if(path.getsize(checkfile)<=50 and checkfile.endswith(".png")):
                 print(checkfile+'\twill be removed')
                 self.falseList.append(int(orderNum))
                 print(orderNum)
-                os.remove(checkfile)
+                remove(checkfile)
                 tmpCheck=True
         return tmpCheck
         
@@ -111,7 +114,7 @@ class download:
                         for j in self.falseList:
                             falseName=str(j)+'.png'
                             self.downloadOne(j, falseName)
-                            if(os.path.getsize(falseName)>2048):
+                            if(path.getsize(falseName)>2048):
                                 self.falseList.remove(j)
                                 print("第"+str(j+1)+"页已重下")
                             else:

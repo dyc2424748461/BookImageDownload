@@ -14,7 +14,6 @@ from py.download import *
 #from py.directory import *
 from py.chulimulu import *
 from py.creatPDF import *
-import os
 from time import sleep
 from py.ml import *
 
@@ -33,10 +32,10 @@ if __name__ == '__main__':
     book.idNum=uuid
     book.page=book.bookPages()
     book.name=book.bookName()
-    parent=os.path.abspath(os.path.join(os.path.dirname("__file__"),os.path.pardir))
-    os.chdir(parent)
+    parent=path.abspath(path.join(path.dirname("__file__"),path.pardir))
+    chdir(parent)
     
-    pwd=os.getcwd();
+    pwd=getcwd();
     print(pwd)
     # page=(input('请输入页数'))
     # download.download(book.idNum, book.id, book.page)
@@ -57,4 +56,4 @@ if __name__ == '__main__':
     
     #将下载的目录格式化 并且打入目录
     muluchuli(bookDir, book.name,dire.ml)
-    sleep(100)
+    sleep(10)

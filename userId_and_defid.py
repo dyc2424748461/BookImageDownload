@@ -14,8 +14,7 @@ from py.download import *
 from py.directory import *
 from py.chulimulu import *
 from py.creatPDF import *
-import os
-from time import sleep
+# from os import getcwd,chdir,path
 from py.ml import *
 
 if __name__ == '__main__':
@@ -25,10 +24,10 @@ if __name__ == '__main__':
     bookId=url[63:]
     # bookdefid=(input('请输入defid'))
     book=book(bookId, '')
-    parent=os.path.abspath(os.path.join(os.path.dirname("__file__"),os.path.pardir))
-    os.chdir(parent)
+    parent=path.abspath(path.join(path.dirname("__file__"),path.pardir))
+    chdir(parent)
     
-    pwd=os.getcwd();
+    pwd=getcwd();
     print(pwd)
     # page=(input('请输入页数'))
     # download.download(book.idNum, book.id, book.page)
@@ -43,9 +42,9 @@ if __name__ == '__main__':
     
     #使用用户的cookie和book id 下载book的目录
    # dire=directory('',bookId,book.name)
-    dire=ml.ml(book.idNum, book.name)
+    dire=ml(book.idNum,book.name)
     
     
     #将下载的目录格式化 并且打入目录
     muluchuli(bookDir, book.name,dire.ml)
-    sleep(100)
+    sleep(20)

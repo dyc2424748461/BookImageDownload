@@ -6,12 +6,16 @@ Created on Wed Mar 16 23:36:18 2022
 """
 
 
-import urllib.request
+
+from urllib.request import Request
+from urllib.request import urlopen
+from requests import post,get
+
 from bs4 import BeautifulSoup
-import requests
-import jsonsearch
-import json
-import sys
+
+from jsonsearch import JsonSearch
+from json import loads
+from sys import exit
 from re import sub
 
 
@@ -71,7 +75,7 @@ class book:
         }
         #print(data)
         try:
-            response = requests.post('https://wkobwp.sciencereading.cn/api/file/add', headers=headers, data=data)
+            response = post('https://wkobwp.sciencereading.cn/api/file/add', headers=headers, data=data)
             defId=response.text[11:-2]
            
         except Exception as e:
@@ -79,7 +83,7 @@ class book:
             print (e.args)
             print('*'*20)
             print('网络错误')
-            sys.exit(0)
+            exit(0)
         print("书籍的特殊标识："+defId)
         return defId
     
@@ -107,17 +111,17 @@ class book:
             ('language', 'zh-CN'),
         )
         getPagesUrl='https://wkobwp.sciencereading.cn/asserts/'+self.idNum+'/manifest'
-        response = requests.get(getPagesUrl, headers=headers, params=params)
+        response = get(getPagesUrl, headers=headers, params=params)
         # print(response)
         # print(type(response))
         # result=ast.literal_eval(response.text)
         # print(type(result))
         # print(result['docinfo'])
-        args=json.loads(response.text)
-        jsondata = jsonsearch.JsonSearch(object=args, mode='j')    
+        args=loads(response.text)
+        jsondata = JsonSearch(object=args, mode='j')    
         keyValue=jsondata.search_first_value(key='docinfo') 
         # print(keyValue)
-        txt = json.loads(str(keyValue))
+        txt = loads(str(keyValue))
         # print(txt)
         # print(type(txt))
         book_page=txt['PageCount']
@@ -127,8 +131,8 @@ class book:
     
     def bookName(self):
         url="https://book.sciencereading.cn/shop/book/Booksimple/show.do?id="+ self.id
-        req=urllib.request.Request(url)
-        resp=urllib.request.urlopen(req)
+        req=Request(url)
+        resp=urlopen(req)
         data=resp.read().decode('utf-8')
         soup = BeautifulSoup(data,'html.parser')
         print("BookName："+soup.title.string)
@@ -149,203 +153,5 @@ class book:
     
 
     
-    
-# class default_userCookieVal:
-#     id=str()
-#     cookie=str()
-#     def __init__(self,id):
-#         self.id=id
-#         self.cookie=self.get_cookie_Default_user()
-        
-        
-#         #从文件中获取 cookie
-#     def get_cookie_from_cache():
-    
-#         cookie_dict = {}
-        
-    
-#         for parent, dirnames, filenames in os.walk('./'):
-        
-#             for filename in filenames:
-            
-#                 if filename.endswith('.cookies'):
-                    
-                
-#                     print('cookie\'s filename:\t'+filename)
-        
-#                     with open(filename, 'rb+') as f:
-        
-#                         d = pickle.load(f)
-        
-#                         if d.__contains__('name') and d.__contains__('value') and d.__contains__('expiry'):
-        
-#                             expiry_date = int(d['expiry'])
-        
-#                             if expiry_date > (int)(time()):
-        
-#                                 cookie_dict[d['name']] = d['value']
-        
-#                             else:
-        
-#                                 return {}
-#             # if(check!=True):
-#             #     return get_cookie_from_network();
-                    
-        
-#         return cookie_dict
-    
-    
-#     #若缓存cookie过期，则再次从网络获取cookie
-    
-#     def get_cookie():
-    
-#         cookie_dict = default_userCookieVal.get_cookie_from_cache()
-        
-#         if not cookie_dict: 
-        
-#             cookie_dict = default_userCookieVal.get_cookie_from_network()
-        
-#         return cookie_dict
-    
-    
-#     def get_cookie_Default_user():
-#         cooke=default_userCookieVal.get_cookie()
-#         print('default_user value:')
-#         print('defalut_user:'+cooke.get('default_user'))
-#         m=cooke.get('default_user')
-#         return m
 
-#     # cookie=get_cookie_Default_user()
-        
-        
-        
-        
-        
-        
-# class download:
-    
-#     def __init__(self,idNum=book.idNum,page=book.page):
-#         self.page=page
-#         self.idNum=idNum
-       
-        
-#     falseList=list()
-        
-        
-        
-        
-#     def init():
-
-#         # named a exchange name 
-#         # mkdir a folder 
-#         try:
-#             folder= book.name
-#             isExists=os.path.exists(folder)
-#             #print(isExists)
-#             if not isExists:
-#                 os.mkdir(folder)
-#         except:
-#                print("network or fileOs occured error")
-#                sys.exit (0)
-            
-#         #chang dir to ./png
-#         pwd=os.getcwd()+'\\'+ folder
-#         print(pwd)
-#         os.chdir(pwd)
-#         return pwd
-
-#        #create a url
-# #this url need you to change
-#     def url(num):
-#         url = ('https://wkobwp.sciencereading.cn/asserts/'
-#                +download.idNum
-#                +'/image/'
-#                +str(num)
-#                +'/100?accessToken=accessToken&formMode=true')
-#         print('正在下载第\t'+str(num+1)+'\t页')
-#         return url
- 
-
-
-#     def downloadPng(page):
-#         #download by wget
-#         for i in range(page):
-#             filename = str(i)+'.png'
-#             #print(os.path.exists(filename))
-#             #os.path.exists(pwd)
-#             '''
-            
-#             '''
-#             if os.path.exists(filename):
-#                 print(str(i+1)+'\t页已存在')
-#                 continue
-#             else:
-#                 download.downloadOne(i, filename)
-            
-# #单个下载
-#     def downloadOne(pageNum,AFilename):
-#         try:
-#             wget.detect_filename(AFilename)
-#             wget.download(download.url(pageNum),out=AFilename)
-#             sleep(random.randint(3, 5))
-#         except:
-#             print("when downloaded the page" +str(pageNum+1)+"\t error occured")
-#             sleep(3)
-#             download.falseList.append(pageNum)
-            
-#     def check():
-#         tmpCheck = False
-#         #print(os.listdir())
-#         for checkfile in os.listdir():
-#             orderNum = checkfile.split('.')[0]
-#             if(os.path.getsize(checkfile)<=2048):
-#                 print(checkfile+'\twill be removed')
-#                 download.falseList.append(int(orderNum))
-#                 print(orderNum)
-#                 os.remove(checkfile)
-#                 tmpCheck=True
-#         return tmpCheck
-        
-#     def download():
-#         n=5
-#         init()
-#         while(n>0):
-#             n=5
-#             try:
-#                 #page=bookPages()
-#                 page = bookPages()
-#                 downloadPng(page)
-#                 if(check()):
-#                     while(len(falseList)!=0):
-#                         for j in falseList:
-#                             falseName=str(j)+'.png'
-#                             downloadOne(j, falseName)
-#                             if(os.path.getsize(falseName)>2048):
-#                                 falseList.remove(j)
-#                                 print("第"+str(j+1)+"页已重下")
-#                             else:
-#                                 print(str(j+1)+"\t下载失败，将稍后重试")
-#                 print(bookNameString)
-#                 print('Number of pages of the book:'+ str(page))
-#                 print("下载完成啦~~~尽情享用")
-#                 n=0
-#             # except Exception as e:
-#             #     print(e.args)
-#             #     print("some error occured,will try again!\t"+str(n)+'')
-#             #     n=n-1
-#             #     sleep(5)
-#         # print(type(123))
-#             #downloadPng(page)
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-# if __name__ == '__main__':
 

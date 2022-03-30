@@ -5,7 +5,7 @@ Created on Wed Mar 30 11:35:13 2022
 @author: MeiYouDYC
 dir
 """
-import requests
+from requests import get 
 from json import loads
 
 class ml:
@@ -35,7 +35,7 @@ class ml:
             'formMode': 'true',
         }
         
-        response = requests.get('https://wkobwp.sciencereading.cn/asserts/'+self.bookIdNum+'/bookmarks', headers=headers, params=params)
+        response = get('https://wkobwp.sciencereading.cn/asserts/'+self.bookIdNum+'/bookmarks', headers=headers, params=params)
         dirc = loads(loads(response.text)['BookmarkInfo'])['bmks']
         dirc = list(dirc)
         f=open(self.bookname+'.ml','w')

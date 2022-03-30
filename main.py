@@ -10,17 +10,17 @@ from py.default_userCookieVal import *
 #from py.directory import *
 from py.chulimulu import *
 from py.creatPDF import *
-import os
+from os import getcwd,chdir,path
 from time import sleep
 from py.ml import *
 
 if __name__=='__main__':
     print('请输入科学文库书籍的介绍页面')
     url=input('类似于这个链接的样子：https://book.sciencereading.cn/shop/book/Booksimple/show.do?id=BB4EB124D2A72B4DBE053020B0A0A860E000\n打开链接访问看看~\n')
-    parent=os.path.abspath(os.path.join(os.path.dirname("__file__"),os.path.pardir))
-    os.chdir(parent)
+    parent=path.abspath(path.join(path.dirname("__file__"),path.pardir))
+    chdir(parent)
     
-    pwd=os.getcwd();
+    pwd=getcwd();
     print(pwd)
     cookiesDir=pwd +'\\cookies\\'
     #获取book的id和用户cookie
@@ -39,10 +39,10 @@ if __name__=='__main__':
     
     #使用用户的cookie和book id 下载book的目录
     #dire=directory(bookId_cookie.get_cookie(),Book.id,Book.name)
-     dire=ml.ml(Book.idNum, Book.name)
+    dire=ml(Book.idNum, Book.name)
     
     
     #将下载的目录格式化 并且打入目录
     muluchuli(bookDir, Book.name,dire.ml)
     
-    sleep(100)
+    sleep(20)

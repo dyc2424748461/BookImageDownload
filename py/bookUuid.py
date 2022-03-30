@@ -7,14 +7,18 @@ book.py
 """
 
 
-import urllib.request
+from urllib.request import Request
+from urllib.request import urlopen
+from requests import post,get
+
 from bs4 import BeautifulSoup
-import requests
-import jsonsearch
-import json
-import sys
-from time import sleep
+
+from jsonsearch import JsonSearch
+from json import loads
+from sys import exit
 from re import sub
+from time import sleep
+
 
 class book:
     id=str()
@@ -84,7 +88,7 @@ class book:
         }
         #print(data)
         try:
-            response = requests.post('https://wkobwp.sciencereading.cn/api/file/add', headers=headers, data=data)
+            response = post('https://wkobwp.sciencereading.cn/api/file/add', headers=headers, data=data)
             defId=response.text[11:-2]
            
         except Exception as e:
@@ -92,7 +96,7 @@ class book:
             print (e.args)
             print('*'*20)
             print('网络错误')
-            sys.exit(0)
+            exit(0)
         print("书籍的特殊标识："+defId)
         return defId
     
@@ -120,18 +124,18 @@ class book:
             ('language', 'zh-CN'),
         )
         getPagesUrl='https://wkobwp.sciencereading.cn/asserts/'+self.idNum+'/manifest'
-        response = requests.get(getPagesUrl, headers=headers, params=params)
+        response = get(getPagesUrl, headers=headers, params=params)
         # print(response)
         # print(type(response))
         # result=ast.literal_eval(response.text)
         # print(type(result))
         # print(result['docinfo'])
-        args=json.loads(response.text)
-        jsondata = jsonsearch.JsonSearch(object=args, mode='j')    
+        args=loads(response.text)
+        jsondata = JsonSearch(object=args, mode='j')    
         keyValue=jsondata.search_first_value(key='docinfo') 
         # print(keyValue)
         sleep(3)
-        txt = json.loads(str(keyValue))
+        txt = loads(str(keyValue))
         # print(txt)
         # print(type(txt))
         book_page=txt['PageCount']
@@ -141,8 +145,8 @@ class book:
     
     def bookName(self):
         url="https://book.sciencereading.cn/shop/book/Booksimple/show.do?id="+ self.id
-        req=urllib.request.Request(url)
-        resp=urllib.request.urlopen(req)
+        req=Request(url)
+        resp=urlopen(req)
         data=resp.read().decode('utf-8')
         soup = BeautifulSoup(data,'html.parser')
         print("BookName："+soup.title.string)
