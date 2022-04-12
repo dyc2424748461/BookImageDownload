@@ -119,6 +119,7 @@ class Download:
                                 self.falseList.remove(j)
                                 print("第"+str(j+1)+"页已重下")
                             else:
+                                remove(filename);
                                 print(str(j+1)+"\t下载失败，将稍后重试")
                 print(self.name)
                 print('Number of pages of the book:'+ str(self.page))
