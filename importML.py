@@ -26,7 +26,7 @@ if __name__ == '__main__':
     # bookdefid=(input('请输入defid'))
     book=book(bookId, '')
 
-    uuid=input('【非必选，可回车】uuid(uuid请查看README.PDF):')
+    uuid=input('uuid(uuid请查看README.PDF)【非必选，可回车，如果点击图书网页的阅读出现“当前图书过大的提示，此项必填”】:\n')
     if (uuid!=""):
         print("uuid")
         book.idNum=uuid
