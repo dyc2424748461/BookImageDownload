@@ -12,12 +12,17 @@ from os import getcwd,chdir,path
 from re import search
 
 class muluchuli:
+    checkBookName=True
     def __init__(self,bookdir,bookName,mlName):
         if(bookdir!=getcwd()):
             chdir(bookdir)
         self.bookdir=bookdir
         self.txt=mlName
-        self.pdfName=bookName+'.pdf'
+        if(bookName.find(":")==-1):
+            self.pdfName=bookName+'.pdf'
+        else:
+            self.checkBookName=False
+            self.pdfName=bookName
         self.bookName=bookName
         self.ml=mlName
         # fin = open(self.ml, "r", encoding='GBK')
@@ -101,11 +106,23 @@ class muluchuli:
                     bookmark_list[num] =  pdf_write.addBookmark(mark, page_num, bookmark_list[num-1])
         
         #将添加好书签的pdf对象写入到new.pdf文件中
-        with open('..\\New_'+self.pdfName, 'wb') as f:
-            pdf_write.write(f)
+        outputString=str()
+        if (self.checkBookName):
+            print(self.checkBookName)
+            outputString= "..\\New_"+self.pdfName
+            with open(outputString, 'wb') as f:
+                pdf_write.write(f)
+        else:
+            tmp=self.pdfName.rfind("/") +1
+            outputString=self.pdfName[:tmp]+"New_"+self.pdfName[tmp:]
+            with open(outputString, 'wb') as f:
+                pdf_write.write(f)
             
         f.close()
-        print('New_'+self.pdfName+'已经导入目录')
-        print('pdf文件在：'+path.abspath(path.join(path.dirname("__file__"),path.pardir))+'\\New_'+self.pdfName)
+        print(outputString+'已经导入目录')
+        if(self.checkBookName):
+            print('pdf文件在：'+path.abspath(path.join(path.dirname("__file__"),path.pardir))+'\\New_'+self.pdfName)
+        else:
+            print('pdf文件在：'+outputString)
 
 
