@@ -34,10 +34,69 @@ class book:
         self.page=self.bookPages()
         self.name=self.bookName()
         self.createTxt()
+
+
+#获取takeid-》uuid
+    def outsizeGetUuid(self):
+        #获取takeid
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0',
+            'Accept': '*/*',
+            'Accept-Language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+            # 'Accept-Encoding': 'gzip, deflate, br',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'accessToken': 'accessToken',
+            'Origin': 'https://book.sciencereading.cn',
+            'Connection': 'keep-alive',
+            'Referer': 'https://book.sciencereading.cn/',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'same-site',
+        }
+        
+        
+        data = {
+            'filetype': 'http',
+            'zooms': '-1,100',
+            'tileRender': 'false',
+            'fileuri': '{"params":{"userName":"Guest","userId":"0a63229aa6494315950934262961e9aa","file":"http://159.226.241.32:81/B58A6236D81858334E053020B0A0A3528000.pdf"}}',
+            'pdfcache': 'true',
+            'callback': '',
+        }
+        
+        response = post('https://wkobwp.sciencereading.cn/spi/v2/doc/pretreat', headers=headers, data=data)
+        ##使用list去读取json
+        dirc = loads(response.text)
+
+        taskid=dirc['resultBody']['taskid']
+        geUuidUrl='https://wkobwp.sciencereading.cn/api/v2/task/'+taskid+'/query'
+        
         
 
+        ##获取uuid
 
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0',
+            'Accept': '*/*',
+            'Accept-Language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+            # 'Accept-Encoding': 'gzip, deflate, br',
+            'accessToken': 'accessToken',
+            'Origin': 'https://book.sciencereading.cn',
+            'Connection': 'keep-alive',
+            'Referer': 'https://book.sciencereading.cn/',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'same-site',
+        }
 
+        response = get('https://wkobwp.sciencereading.cn/api/v2/task/ae89cd9c-fca5-4cd5-bb71-b3d67155f456/query', headers=headers)
+        dirc = loads(response.text)
+
+        uuid=dirc['resultBody']['uuid']
+        return uuid 
+        
+                
+        
     def getIdNum(self):
         #readurl = 'https://book.sciencereading.cn/shop/book/Booksimple/onlineRead.do?id=B001CCEA30DC346C2839439559EB8C6EB000&readMark=0'
         # try:
@@ -76,7 +135,14 @@ class book:
         #print(data)
         try:
             response = post('https://wkobwp.sciencereading.cn/api/file/add', headers=headers, data=data)
-            defId=response.text[11:-2]
+            
+            dirc = loads(response.text)
+
+            uuid=dirc['result']
+            defId=uuid
+            if(defId=='OutOfFileSizeLimit'):
+                return self.outsizeGetUuid()
+            #defId=response.text[11:-2]
            
         except Exception as e:
             print('*'*20)
@@ -84,7 +150,7 @@ class book:
             print('*'*20)
             print('网络错误')
             exit(0)
-        print("书籍的特殊标识："+defId)
+        print("书籍的特殊标识（uuid）："+defId)
         return defId
     
     
@@ -150,7 +216,11 @@ class book:
         f.close()
     
 
-
+if __name__=='__main__':
+    inputUrl='https://book.sciencereading.cn/shop/book/Booksimple/show.do?id=B58A6236D81858334E053020B0A0A3528000'
+    bookId='B58A6236D81858334E053020B0A0A3528000'
+    test=book(bookId, '')
+    print(test.idNum)
     
 
     
