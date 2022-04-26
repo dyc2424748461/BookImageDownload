@@ -16,6 +16,7 @@ from bs4 import BeautifulSoup
 from jsonsearch import JsonSearch
 from json import loads
 from sys import exit
+from time import sleep
 from re import sub
 
 
@@ -59,7 +60,7 @@ class book:
             'filetype': 'http',
             'zooms': '-1,100',
             'tileRender': 'false',
-            'fileuri': '{"params":{"userName":"Guest","userId":"0a63229aa6494315950934262961e9aa","file":"http://159.226.241.32:81/B58A6236D81858334E053020B0A0A3528000.pdf"}}',
+            'fileuri': '{"params":{"userName":"Guest","userId":"","file":"http://159.226.241.32:81/'+self.id+'.pdf"}}',
             'pdfcache': 'true',
             'callback': '',
         }
@@ -75,11 +76,12 @@ class book:
 
         ##获取uuid
 
+      
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0',
             'Accept': '*/*',
             'Accept-Language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
-            # 'Accept-Encoding': 'gzip, deflate, br',
+            'Accept-Encoding': 'gzip, deflate, br',
             'accessToken': 'accessToken',
             'Origin': 'https://book.sciencereading.cn',
             'Connection': 'keep-alive',
@@ -88,11 +90,25 @@ class book:
             'Sec-Fetch-Mode': 'cors',
             'Sec-Fetch-Site': 'same-site',
         }
+        
 
-        response = get('https://wkobwp.sciencereading.cn/api/v2/task/ae89cd9c-fca5-4cd5-bb71-b3d67155f456/query', headers=headers)
-        dirc = loads(response.text)
+        url='https://wkobwp.sciencereading.cn/api/v2/task/'+taskid+'/query'
 
-        uuid=dirc['resultBody']['uuid']
+
+        response = get(url, headers)
+        dirc1 = loads(response.text)
+        tmp=list(dirc1['resultBody'])
+        while(tmp[0]!='docid'):
+            sleep(3)
+            response = get(url, headers)
+            dirc1 = loads(response.text)
+            tmp=list(dirc1['resultBody'])
+        
+        uuid=dirc1['resultBody']['uuid']
+        
+           
+            #response = get(url, headers)
+        print("uuid",uuid)
         return uuid 
         
                 
@@ -146,7 +162,7 @@ class book:
            
         except Exception as e:
             print('*'*20)
-            print (e.args)
+            print (e.with_traceback())
             print('*'*20)
             print('网络错误')
             exit(0)
@@ -158,6 +174,29 @@ class book:
         
     #获取书籍的页数
     def bookPages(self):
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            'Accept-Language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Referer': 'https://book.sciencereading.cn/shop/book/Booksimple/show.do?id='+self.id+'',
+            'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+            'Sec-Fetch-Dest': 'document',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-Site': 'same-origin',
+            'Sec-Fetch-User': '?1',
+            'Cache-Control': 'max-age=0',
+        }
+        
+        params = (
+            ('id', self.id),
+            ('readMark', '0'),
+        )
+        
+        response = get('https://book.sciencereading.cn/shop/book/Booksimple/onlineRead.do', headers=headers, params=params)
+        
+
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0',
             'Accept': 'application/json, text/javascript, */*; q=0.01',
@@ -176,7 +215,7 @@ class book:
         params = (
             ('language', 'zh-CN'),
         )
-        getPagesUrl='https://wkobwp.sciencereading.cn/asserts/'+self.idNum+'/manifest'
+        getPagesUrl='https://wkobwp.sciencereading.cn/asserts/'+self.idNum+'/manifest?'
         response = get(getPagesUrl, headers=headers, params=params)
         # print(response)
         # print(type(response))
@@ -205,7 +244,7 @@ class book:
          #将bookname中含有特殊字符替换成“-”，以便建文件夹
         EPunctuation='\\\\/:*?"<>|'
         name=sub('[{}]'.format(EPunctuation),'-',soup.title.string)
-        print('name:'+str(type(name)))
+        # print('name:'+str(type(name)))
         return name
     
     def createTxt(self):
@@ -217,10 +256,13 @@ class book:
     
 
 if __name__=='__main__':
+    #https://book.sciencereading.cn/shop/book/Booksimple/show.do?id=B6094AD96CD3A907CE053010B0A0A87DE000
     inputUrl='https://book.sciencereading.cn/shop/book/Booksimple/show.do?id=B58A6236D81858334E053020B0A0A3528000'
-    bookId='B58A6236D81858334E053020B0A0A3528000'
+    bookId='BB4E8E64847725343E053010B0A0A67EF000'
+    # bookId='B6094AD96CD3A907CE053010B0A0A87DE000'
     test=book(bookId, '')
     print(test.idNum)
+    #print(test.page)
     
 
     
