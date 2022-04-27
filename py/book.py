@@ -76,7 +76,32 @@ class book:
 
         ##获取uuid
 
-      
+         ###预处理一下连接 提高成功率
+         
+        
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            'Accept-Language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Referer': 'https://book.sciencereading.cn/shop/book/Booksimple/show.do?id='+self.id+'',
+            'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+            'Sec-Fetch-Dest': 'document',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-Site': 'same-origin',
+            'Sec-Fetch-User': '?1',
+            'Cache-Control': 'max-age=0',
+        }
+        
+        params = (
+            ('id', self.id),
+            ('readMark', '0'),
+        )
+        
+        response = get('https://book.sciencereading.cn/shop/book/Booksimple/onlineRead.do', headers=headers, params=params)
+
+
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0',
             'Accept': '*/*',
@@ -174,36 +199,13 @@ class book:
         
     #获取书籍的页数
     def bookPages(self):
+        
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-            'Accept-Language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Referer': 'https://book.sciencereading.cn/shop/book/Booksimple/show.do?id='+self.id+'',
-            'Connection': 'keep-alive',
-            'Upgrade-Insecure-Requests': '1',
-            'Sec-Fetch-Dest': 'document',
-            'Sec-Fetch-Mode': 'navigate',
-            'Sec-Fetch-Site': 'same-origin',
-            'Sec-Fetch-User': '?1',
-            'Cache-Control': 'max-age=0',
-        }
-        
-        params = (
-            ('id', self.id),
-            ('readMark', '0'),
-        )
-        
-        response = get('https://book.sciencereading.cn/shop/book/Booksimple/onlineRead.do', headers=headers, params=params)
-        
-
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0',
-            'Accept': 'application/json, text/javascript, */*; q=0.01',
+            'Accept': '*/*',
             'Accept-Language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
             'Accept-Encoding': 'gzip, deflate, br',
             'accessToken': 'accessToken',
-            'x-auth-doc': '',
             'Origin': 'https://book.sciencereading.cn',
             'Connection': 'keep-alive',
             'Referer': 'https://book.sciencereading.cn/',
@@ -212,10 +214,17 @@ class book:
             'Sec-Fetch-Site': 'same-site',
         }
         
+        params1 = (
+            ('fileId', self.idNum),
+        )
+        
+        response1 = get('https://wkobwp.sciencereading.cn/api/file/info', headers=headers, params=params1)
+                
+        
         params = (
             ('language', 'zh-CN'),
         )
-        getPagesUrl='https://wkobwp.sciencereading.cn/asserts/'+self.idNum+'/manifest?'
+        getPagesUrl='https://wkobwp.sciencereading.cn/asserts/'+self.idNum+'/manifest'
         response = get(getPagesUrl, headers=headers, params=params)
         # print(response)
         # print(type(response))
@@ -223,7 +232,18 @@ class book:
         # print(type(result))
         # print(result['docinfo'])
         args=loads(response.text)
+        while(args['error']!=0):
+            response1 = get('https://wkobwp.sciencereading.cn/api/file/info', headers=headers, params=params1)
+            sleep(3)
+            response = get(getPagesUrl, headers=headers, params=params)
+            args=loads(response.text)
+            # print(response.text)
+        
         jsondata = JsonSearch(object=args, mode='j')    
+        
+        
+        
+        
         keyValue=jsondata.search_first_value(key='docinfo') 
         # print(keyValue)
         txt = loads(str(keyValue))
@@ -258,8 +278,8 @@ class book:
 if __name__=='__main__':
     #https://book.sciencereading.cn/shop/book/Booksimple/show.do?id=B6094AD96CD3A907CE053010B0A0A87DE000
     inputUrl='https://book.sciencereading.cn/shop/book/Booksimple/show.do?id=B58A6236D81858334E053020B0A0A3528000'
-    bookId='BB4E8E64847725343E053010B0A0A67EF000'
-    # bookId='B6094AD96CD3A907CE053010B0A0A87DE000'
+    # bookId='B58A6236D81858334E053020B0A0A3528000'
+    bookId='B6094AD96CD3A907CE053010B0A0A87DE000'
     test=book(bookId, '')
     print(test.idNum)
     #print(test.page)
