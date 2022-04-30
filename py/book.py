@@ -270,7 +270,7 @@ class book:
     def createTxt(self):
         f=open(self.name+'.html','w')
         url="https://book.sciencereading.cn/shop/book/Booksimple/show.do?id="+self.id
-        html='<meta http-equiv="refresh" content="1;url="'+url+'">'
+        html='<meta http-equiv="refresh" content="1;url='+url+'">'
         f.write(html)
         f.close()
     

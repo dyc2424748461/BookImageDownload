@@ -58,7 +58,7 @@ class Download:
                +'/image/'
                +str(num)
                +'/100?accessToken=accessToken&formMode=true')
-        print('正在下载第\t'+str(num+1)+'页')
+        print('正在下载第\t'+str(num+1)+'/'+str(self.page+1)+'页')
         return urladd
  
 
@@ -107,7 +107,7 @@ class Download:
         n=5
         self.init()
         while(n>0):
-            n=5
+            # n=5
             try:
                 self.downloadPng(self.page)
                 if(self.check()):
@@ -119,8 +119,9 @@ class Download:
                                 self.falseList.remove(j)
                                 print("第"+str(j+1)+"页已重下")
                             else:
-                                remove(filename);
+                                remove(falseName);
                                 print(str(j+1)+"\t下载失败，将稍后重试")
+                n=5
                 print(self.name)
                 print('Number of pages of the book:'+ str(self.page))
                 print("下载完成啦~~~尽情享用")
