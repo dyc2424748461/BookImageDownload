@@ -57,7 +57,7 @@ class Download:
                +self.idNum
                +'/image/'
                +str(num)
-               +'/100?accessToken=accessToken&formMode=true')
+               +'/200?accessToken=accessToken&formMode=true')
         print('正在下载第\t'+str(num+1)+'/'+str(self.page+1)+'页')
         return urladd
  
