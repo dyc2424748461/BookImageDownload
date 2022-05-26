@@ -1,3 +1,8 @@
+下载science文库中的一些书的图片然后生成pdf，导入了书签。
+
+下载仅需要书的主页面
+<img src="README.assets/image-20220318002845878.png" alt="image-20220318002845878" style="zoom: 25%;" />
+
 >网络上东拼西凑 俺不会python
 >
 >当使用python运行时，请手动创建两层目录
